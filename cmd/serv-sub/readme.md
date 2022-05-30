@@ -27,3 +27,9 @@ To publish a message use application serv-pub or send a http POST request to loc
     }
 }
 ```
+
+For tracing check the Zipkin console: https://docs.dapr.io/operations/monitoring/tracing/supported-tracing-backends/zipkin/
+
+```
+http://localhost:9411/
+```
