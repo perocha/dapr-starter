@@ -28,8 +28,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: acr04d522.azurecr.io
-          username: ${{ secrets.MYCONTAINERAPP_REGISTRY_USERNAME }}
-          password: ${{ secrets.MYCONTAINERAPP_REGISTRY_PASSWORD }}
+          username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
       - name: Build and push container image to registry
         uses: docker/build-push-action@v2
