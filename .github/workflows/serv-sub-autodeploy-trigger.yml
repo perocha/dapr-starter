@@ -1,4 +1,4 @@
-name: Trigger auto deployment for my-container-app
+name: Trigger auto deployment for serv-sub
 
 # When this action will be executed
 on:
@@ -8,7 +8,7 @@ on:
       [ master ]
     paths:
     - '**'
-    - '.github/workflows/my-container-app-autodeploy-trigger.yml'
+    - '.github/workflows/serv-sub-autodeploy-trigger.yml'
 
   # Allow mannually trigger 
   workflow_dispatch:
@@ -35,6 +35,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: acr04d522.azurecr.io/my-container-app:${{ github.sha }}
+          tags: acr04d522.azurecr.io/serv-sub:${{ github.sha }}
           file: ./Dockerfile
           context: ./
