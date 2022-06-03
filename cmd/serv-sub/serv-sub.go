@@ -25,9 +25,11 @@ func main() {
 	// Refer to https://docs.dapr.io/reference/cli/dapr-run/
 	// for dapr flags and their corresponding environment variables
 	appPort, isSet := os.LookupEnv("APP_PORT")
-	if !isSet {
-		log.Fatalf("--app-port is not set. Re-run dapr run with -p or --app-port.")
-	}
+	/*	if !isSet {
+			log.Fatalf("--app-port is not set. Re-run dapr run with -p or --app-port.")
+		}
+	*/
+	appPort = "6001"
 
 	s := daprd.NewService(":" + appPort)
 	if err := s.AddTopicEventHandler(sub, eventHandler); err != nil {
