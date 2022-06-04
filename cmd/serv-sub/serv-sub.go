@@ -22,12 +22,14 @@ var sub = &common.Subscription{
 //
 func main() {
 	// Read APP_PORT from container
-	appPort, isSet := os.LookupEnv("APP_PORT")
-	if !isSet {
-		log.Fatalf("APP_PORT is not set")
-	}
+	//	appPort, isSet := os.LookupEnv("APP_PORT")
+	appPort := os.Getenv("APP_PORT")
+	/*	if !isSet {
+			log.Fatalf("APP_PORT is not set")
+		}
+	*/
 	//	appPort := "6001"
-	log.Printf("Starting Dapr Subscriber on port %s", appPort)
+	log.Printf("New starting Dapr Subscriber on port %s", appPort)
 
 	s := daprd.NewService(":" + appPort)
 	log.Printf("Subscribing to topic %s", sub.Topic)
