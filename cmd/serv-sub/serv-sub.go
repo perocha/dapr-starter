@@ -30,8 +30,10 @@ func main() {
 			}
 	*/
 	appPort := "6001"
+	log.Printf("Starting Dapr Subscriber on port %s", appPort)
 
 	s := daprd.NewService(":" + appPort)
+	log.Printf("Subscribing to topic %s", sub.Topic)
 	if err := s.AddTopicEventHandler(sub, eventHandler); err != nil {
 		log.Fatalf("error adding topic subscription: %v", err)
 	}
