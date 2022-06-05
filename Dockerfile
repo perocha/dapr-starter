@@ -7,14 +7,15 @@ RUN go mod download
 # Step 2: Builder
 FROM golang:rc-alpine as builder
 COPY --from=modules /go/pkg /go/pkg
-COPY . /serv-sub
-WORKDIR /serv-sub
+COPY . /app
+COPY ./cmd/serv-sub/*.go /app/
+WORKDIR /app
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build -o serv-sub -buildvcs=false
 
 # Step 3: Final
 FROM scratch
-COPY --from=builder /serv-sub/config /config
-COPY --from=builder /bin/serv-sub /serv-sub
+COPY --from=builder /app/config /config
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs
+COPY --from=builder /app/serv-sub /usr/bin/serv-sub
 ENTRYPOINT ["serv-sub"]
