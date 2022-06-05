@@ -8,7 +8,6 @@ import (
 	"time"
 
 	dapr "github.com/dapr/go-sdk/client"
-	"github.com/joho/godotenv"
 	"github.com/perocha/dapr-starter/pkg/order"
 )
 
@@ -27,12 +26,13 @@ var (
 func main() {
 	log.Printf("Dapr-starter is starting... service name: %v version: %v", serviceName, version)
 
-	// Load environment information file
-	err := godotenv.Load(LOCAL_ENV_FILE)
-	if err != nil {
-		log.Fatalf("Cannot load local environment information: %s", err)
-	}
-
+	/*
+		// Load environment information file
+		err := godotenv.Load(LOCAL_ENV_FILE)
+		if err != nil {
+			log.Fatalf("Cannot load local environment information: %s", err)
+		}
+	*/
 	serverPort := os.Getenv("DEFAULTPORT")
 	log.Printf("serverPort: %s", serverPort)
 
