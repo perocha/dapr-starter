@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/spf13/viper"
+
 	"github.com/dapr/go-sdk/service/common"
 	daprd "github.com/dapr/go-sdk/service/http"
 )
@@ -28,6 +30,17 @@ func main() {
 	log.Printf("DAPR_HTTP_PORT: %s", os.Getenv("DAPR_HTTP_PORT"))
 	log.Printf("DAPR_GRPC_PORT: %s", os.Getenv("DAPR_GRPC_PORT"))
 	log.Printf("NAMESPACE: %s", os.Getenv("NAMESPACE"))
+
+	// Use viper to read config from environment variables
+	viper.SetEnvPrefix("dapr")
+	viper.AutomaticEnv()
+	viper.SetDefault("port", "8080")
+	viper.SetDefault("pubsub_name", "orderpubsub")
+	viper.SetDefault("topic", "orders")
+	viper.SetDefault("route", "/orders")
+	viper.SetDefault("app_id", "order-sub")
+	viper.SetDefault("app_port", "6001")
+
 	appPort := os.Getenv("APP_PORT")
 	/*	if !isSet {
 			log.Fatalf("APP_PORT is not set")
