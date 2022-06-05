@@ -1,5 +1,4 @@
 # Alpine is chosen for its small footprint compared to Ubuntu
-#RUN	apk add --no-cache ca-certificates
 
 # Step #1 - Download all necessary GO modules
 FROM golang:rc-alpine as modules
@@ -9,6 +8,7 @@ RUN go mod download
 
 # Step #2 - Build the application
 FROM golang:rc-alpine as builder
+RUN	apk add --no-cache ca-certificates
 COPY --from=modules /go/pkg /go/pkg
 COPY . /app
 COPY ./cmd/serv-sub/*.go /app/
@@ -22,6 +22,5 @@ RUN set -x && env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./app -build
 # Copy files to final location
 FROM scratch
 COPY --from=builder /app/config /config
-COPY --from=builder /app/bin /bin
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs
 ENTRYPOINT [ "serv-sub" ]
