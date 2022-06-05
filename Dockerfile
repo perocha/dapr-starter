@@ -1,26 +1,20 @@
-# Alpine is chosen for its small footprint compared to Ubuntu
-
-# Step #1 - Download all necessary GO modules
-FROM golang:rc-alpine as modules
-WORKDIR /modules
+# Step 1: Modules caching
+FROM golang:1.17.1-alpine3.14 as modules
 COPY go.mod go.sum /modules/
+WORKDIR /modules
 RUN go mod download
 
-# Step #2 - Build the application
-FROM golang:rc-alpine as builder
-RUN	apk add --no-cache ca-certificates
+# Step 2: Builder
+FROM golang:1.17.1-alpine3.14 as builder
 COPY --from=modules /go/pkg /go/pkg
 COPY . /serv-sub
-COPY ./cmd/serv-sub/*.go /serv-sub/
 WORKDIR /serv-sub
-RUN set -x && env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./serv-sub -buildvcs=false
-#COPY ./config/* /config/
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -tags migrate -o /bin/serv-sub ./cmd/serv-sub
 
-# Build
-#RUN set -x && env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /serv-sub -buildvcs=false
-
-# Copy files to final location
+# Step 3: Final
 FROM scratch
 COPY --from=builder /serv-sub/config /config
+COPY --from=builder /bin/serv-sub /serv-sub
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs
-ENTRYPOINT [ "serv-sub" ]
+CMD ["/serv-sub"]

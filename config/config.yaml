@@ -1,4 +1,4 @@
 app:
   name: 'serv-sub'
   version: '1.0'
-  port: '6001'
+  port: '6023'

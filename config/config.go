@@ -51,7 +51,7 @@ func readViperConfig(appName string) (*viper.Viper, error) {
 
 	v.SetConfigType("yaml")
 	v.SetConfigName("config")
-	v.AddConfigPath(".")
+	v.AddConfigPath("./config")
 
 	err := v.ReadInConfig()
 	if err != nil {
