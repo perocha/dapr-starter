@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/dapr/go-sdk/service/common"
 	daprd "github.com/dapr/go-sdk/service/http"
@@ -24,28 +23,20 @@ var sub = &common.Subscription{
 //
 func main() {
 	// Read configuration file
-	cfg, err := config.NewConfig()
+	cfg, err := config.LoadConfigProvider("serv-sub")
 	if err != nil {
 		log.Fatalf("Failed to read config: %v", err)
 	}
 
-	appPort := cfg.AppPort
-	log.Printf("cfg.AppPort %s", appPort)
+	// Log module name and version
+	log.Printf("Dapr-starter module: %s version: %s", cfg.Get("app.name"), cfg.Get("app.version"))
 
-	log.Printf("APP_ID: %s", os.Getenv("APP_ID"))
-	log.Printf("APP_PORT: %s", os.Getenv("APP_PORT"))
-	log.Printf("DAPR_HTTP_PORT: %s", os.Getenv("DAPR_HTTP_PORT"))
-	log.Printf("DAPR_GRPC_PORT: %s", os.Getenv("DAPR_GRPC_PORT"))
-	log.Printf("NAMESPACE: %s", os.Getenv("NAMESPACE"))
-
-	/*	if !isSet {
-			log.Fatalf("APP_PORT is not set")
-		}
-	*/
-	//	appPort := "6001"
+	// Start a new Dapr client
+	appPort := cfg.Get("app.port").(string)
 	log.Printf("New starting Dapr Subscriber on port %s", appPort)
-
 	s := daprd.NewService(":" + appPort)
+
+	// Register a new subscription
 	log.Printf("Subscribing to topic %s", sub.Topic)
 	if err := s.AddTopicEventHandler(sub, eventHandler); err != nil {
 		log.Fatalf("error adding topic subscription: %v", err)

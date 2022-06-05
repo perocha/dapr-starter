@@ -1,23 +1,61 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"time"
 
-type Config struct {
-	AppPort      string `mapstructure:"APP_PORT"`
-	DaprPort     string `mapstructure:"DAPR_HTTP_PORT"`
-	DaprGrpcPort string `mapstructure:"DAPR_GRPC_PORT"`
-	Namespace    string `mapstructure:"NAMESPACE"`
+	"github.com/spf13/viper"
+)
+
+// Provider is the interface for config providers
+type Provider interface {
+	ConfigFileUsed() string
+	Get(key string) interface{}
+	GetBool(key string) bool
+	GetDuration(key string) time.Duration
+	GetFloat64(key string) float64
+	GetInt(key string) int
+	GetInt64(key string) int64
+	GetSizeInBytes(key string) uint
+	GetString(key string) string
+	GetStringMap(key string) map[string]interface{}
+	GetStringMapString(key string) map[string]string
+	GetStringMapStringSlice(key string) map[string][]string
+	GetStringSlice(key string) []string
+	GetTime(key string) time.Time
+	InConfig(key string) bool
+	IsSet(key string) bool
 }
 
-func NewConfig() (*Config, error) {
-	cfg := &Config{}
+// defaultConfig is the default config provider
+var defaultConfig *viper.Viper
 
-	viper.SetConfigType("yaml")
-	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
-	err := viper.ReadInConfig()
+// Config returns a default config providers
+func Config() Provider {
+	return defaultConfig
+}
+
+// NewViperProvider returns a new viper config provider
+func LoadConfigProvider(appName string) (Provider, error) {
+	prov, err := readViperConfig(appName)
 	if err != nil {
 		return nil, err
 	}
-	return cfg, nil
+	return prov, nil
+}
+
+// readViperConfig reads the config file and returns a viper config provider
+func readViperConfig(appName string) (*viper.Viper, error) {
+	v := viper.New()
+	v.SetEnvPrefix(appName)
+	v.AutomaticEnv()
+
+	v.SetConfigType("yaml")
+	v.SetConfigName("config")
+	v.AddConfigPath(".")
+
+	err := v.ReadInConfig()
+	if err != nil {
+		return nil, err
+	}
+	return v, nil
 }
