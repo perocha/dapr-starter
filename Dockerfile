@@ -10,11 +10,11 @@ COPY --from=modules /go/pkg /go/pkg
 COPY . /serv-sub
 WORKDIR /serv-sub
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -tags migrate -o /bin/serv-sub ./cmd/serv-sub -buildvcs=false
+    go build -o serv-sub -buildvcs=false
 
 # Step 3: Final
 FROM scratch
 COPY --from=builder /serv-sub/config /config
 COPY --from=builder /bin/serv-sub /serv-sub
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs
-CMD ["/serv-sub"]
+ENTRYPOINT ["serv-sub"]
