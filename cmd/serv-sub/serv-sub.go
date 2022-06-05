@@ -8,6 +8,7 @@ import (
 
 	"github.com/dapr/go-sdk/service/common"
 	daprd "github.com/dapr/go-sdk/service/http"
+	"github.com/perocha/dapr-starter/config"
 )
 
 var sub = &common.Subscription{
@@ -20,20 +21,17 @@ var sub = &common.Subscription{
 // Main entry point
 //
 func main() {
-	/*
-		// Read configuration file
-		cfg, err := config.LoadConfigProvider("serv-sub")
-		if err != nil {
-			log.Fatalf("Failed to read config: %v", err)
-		}
+	// Read configuration file
+	cfg, err := config.LoadConfigProvider("serv-sub")
+	if err != nil {
+		log.Fatalf("Failed to read config: %v", err)
+	}
 
-		// Log module name and version
-		log.Printf("Dapr-starter module: %s version: %s", cfg.Get("app.name"), cfg.Get("app.version"))
+	// Log module name and version
+	log.Printf("Dapr-starter module: %s version: %s", cfg.Get("app.name"), cfg.Get("app.version"))
 
-		// Start a new Dapr client
-		appPort := cfg.Get("app.port").(string)
-	*/
-	appPort := "6001"
+	// Start a new Dapr client
+	appPort := cfg.Get("app.port").(string)
 	log.Printf("New starting Dapr Subscriber on port %s", appPort)
 	s := daprd.NewService(":" + appPort)
 
