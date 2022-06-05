@@ -1,11 +1,11 @@
 # Step 1: Modules caching
-FROM golang:1.17.1-alpine3.14 as modules
+FROM golang:rc-alpine as modules
 COPY go.mod go.sum /modules/
 WORKDIR /modules
 RUN go mod download
 
 # Step 2: Builder
-FROM golang:1.17.1-alpine3.14 as builder
+FROM golang:rc-alpine as builder
 COPY --from=modules /go/pkg /go/pkg
 COPY . /serv-sub
 WORKDIR /serv-sub

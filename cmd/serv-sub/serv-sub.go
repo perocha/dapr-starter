@@ -33,6 +33,7 @@ func main() {
 
 	// Start a new Dapr client
 	appPort := cfg.Get("app.port").(string)
+	appPort = "6001"
 	log.Printf("New starting Dapr Subscriber on port %s", appPort)
 	s := daprd.NewService(":" + appPort)
 
