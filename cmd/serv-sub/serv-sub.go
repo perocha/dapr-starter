@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/spf13/viper"
-
 	"github.com/dapr/go-sdk/service/common"
 	daprd "github.com/dapr/go-sdk/service/http"
+
+	"github.com/perocha/dapr-starter/config"
 )
 
 var sub = &common.Subscription{
@@ -23,17 +23,14 @@ var sub = &common.Subscription{
 // Main entry point
 //
 func main() {
-	// Read APP_PORT from container
+	// Read configuration file
+	cfg, err := config.NewConfig()
+	if err != nil {
+		log.Fatalf("Failed to read config: %v", err)
+	}
 
-	// Use viper to read config from environment variables
-	viper.SetEnvPrefix("dapr")
-	viper.AutomaticEnv()
-	viper.SetDefault("port", "8080")
-	viper.SetDefault("pubsub_name", "orderpubsub")
-	viper.SetDefault("topic", "orders")
-	viper.SetDefault("route", "/orders")
-	viper.SetDefault("app_id", "order-sub")
-	viper.SetDefault("app_port", "6001")
+	appPort := cfg.AppPort
+	log.Printf("cfg.AppPort %s", appPort)
 
 	log.Printf("APP_ID: %s", os.Getenv("APP_ID"))
 	log.Printf("APP_PORT: %s", os.Getenv("APP_PORT"))
@@ -41,7 +38,6 @@ func main() {
 	log.Printf("DAPR_GRPC_PORT: %s", os.Getenv("DAPR_GRPC_PORT"))
 	log.Printf("NAMESPACE: %s", os.Getenv("NAMESPACE"))
 
-	appPort := os.Getenv("APP_PORT")
 	/*	if !isSet {
 			log.Fatalf("APP_PORT is not set")
 		}
