@@ -24,12 +24,6 @@ var sub = &common.Subscription{
 //
 func main() {
 	// Read APP_PORT from container
-	//	appPort, isSet := os.LookupEnv("APP_PORT")
-	log.Printf("APP_ID: %s", os.Getenv("APP_ID"))
-	log.Printf("APP_PORT: %s", os.Getenv("APP_PORT"))
-	log.Printf("DAPR_HTTP_PORT: %s", os.Getenv("DAPR_HTTP_PORT"))
-	log.Printf("DAPR_GRPC_PORT: %s", os.Getenv("DAPR_GRPC_PORT"))
-	log.Printf("NAMESPACE: %s", os.Getenv("NAMESPACE"))
 
 	// Use viper to read config from environment variables
 	viper.SetEnvPrefix("dapr")
@@ -40,6 +34,12 @@ func main() {
 	viper.SetDefault("route", "/orders")
 	viper.SetDefault("app_id", "order-sub")
 	viper.SetDefault("app_port", "6001")
+
+	log.Printf("APP_ID: %s", os.Getenv("APP_ID"))
+	log.Printf("APP_PORT: %s", os.Getenv("APP_PORT"))
+	log.Printf("DAPR_HTTP_PORT: %s", os.Getenv("DAPR_HTTP_PORT"))
+	log.Printf("DAPR_GRPC_PORT: %s", os.Getenv("DAPR_GRPC_PORT"))
+	log.Printf("NAMESPACE: %s", os.Getenv("NAMESPACE"))
 
 	appPort := os.Getenv("APP_PORT")
 	/*	if !isSet {
