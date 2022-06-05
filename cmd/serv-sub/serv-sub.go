@@ -23,6 +23,11 @@ var sub = &common.Subscription{
 func main() {
 	// Read APP_PORT from container
 	//	appPort, isSet := os.LookupEnv("APP_PORT")
+	log.Printf("APP_ID: %s", os.Getenv("APP_ID"))
+	log.Printf("APP_PORT: %s", os.Getenv("APP_PORT"))
+	log.Printf("DAPR_HTTP_PORT: %s", os.Getenv("DAPR_HTTP_PORT"))
+	log.Printf("DAPR_GRPC_PORT: %s", os.Getenv("DAPR_GRPC_PORT"))
+	log.Printf("NAMESPACE: %s", os.Getenv("NAMESPACE"))
 	appPort := os.Getenv("APP_PORT")
 	/*	if !isSet {
 			log.Fatalf("APP_PORT is not set")
