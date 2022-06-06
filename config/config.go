@@ -1,61 +1,39 @@
 package config
 
 import (
-	"time"
+	"log"
 
-	"github.com/spf13/viper"
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
-// Provider is the interface for config providers
-type Provider interface {
-	ConfigFileUsed() string
-	Get(key string) interface{}
-	GetBool(key string) bool
-	GetDuration(key string) time.Duration
-	GetFloat64(key string) float64
-	GetInt(key string) int
-	GetInt64(key string) int64
-	GetSizeInBytes(key string) uint
-	GetString(key string) string
-	GetStringMap(key string) map[string]interface{}
-	GetStringMapString(key string) map[string]string
-	GetStringMapStringSlice(key string) map[string][]string
-	GetStringSlice(key string) []string
-	GetTime(key string) time.Time
-	InConfig(key string) bool
-	IsSet(key string) bool
-}
+type (
+	// Config
+	Config struct {
+		App `yaml:"app"`
+	}
 
-// defaultConfig is the default config provider
-var defaultConfig *viper.Viper
+	// App
+	App struct {
+		Name    string `env-required:"true" yaml:"name"    env:"APP_NAME"`
+		Version string `env-required:"true" yaml:"version" env:"APP_VERSION"`
+		Port    string `env-required:"true" yaml:"port"    env:"APP_PORT"`
+	}
+)
 
-// Config returns a default config providers
-func Config() Provider {
-	return defaultConfig
-}
+// NewConfig returns app config.
+func NewConfig() (*Config, error) {
+	cfg := &Config{}
 
-// NewViperProvider returns a new viper config provider
-func LoadConfigProvider(appName string) (Provider, error) {
-	prov, err := readViperConfig(appName)
+	err := cleanenv.ReadConfig("./config/config.yaml", cfg)
+	if err != nil {
+		log.Fatalf("config error: %s", err)
+		return nil, err
+	}
+
+	err = cleanenv.ReadEnv(cfg)
 	if err != nil {
 		return nil, err
 	}
-	return prov, nil
-}
 
-// readViperConfig reads the config file and returns a viper config provider
-func readViperConfig(appName string) (*viper.Viper, error) {
-	v := viper.New()
-	v.SetEnvPrefix(appName)
-	v.AutomaticEnv()
-
-	v.SetConfigType("yaml")
-	v.SetConfigName("config")
-	v.AddConfigPath("./config")
-
-	err := v.ReadInConfig()
-	if err != nil {
-		return nil, err
-	}
-	return v, nil
+	return cfg, nil
 }

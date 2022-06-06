@@ -8,7 +8,6 @@ import (
 	"time"
 
 	dapr "github.com/dapr/go-sdk/client"
-	"github.com/perocha/dapr-starter/pkg/order"
 )
 
 var (
@@ -45,8 +44,8 @@ func main() {
 	ctx := context.Background()
 
 	for i := 1; i <= 20; i++ {
-		//		myOrder := `{"orderId":` + strconv.Itoa(i) + `}`
-		myOrder := order.Order{strconv.Itoa(i), "Description 1", "10,98"}
+		myOrder := `{"orderId":` + strconv.Itoa(i) + `}`
+		//		myOrder := order.Order{strconv.Itoa(i), "Description 1", "10,98"}
 
 		// Publish an event using Dapr pub/sub
 		if err := client.PublishEvent(ctx, PUBSUB_NAME, PUBSUB_TOPIC, &myOrder); err != nil {

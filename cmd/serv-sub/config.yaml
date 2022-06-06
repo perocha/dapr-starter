@@ -1,4 +1,0 @@
-app:
-  name: 'serv-sub-main'
-  version: '1.0'
-  port: '6001'
