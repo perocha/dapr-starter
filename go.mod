@@ -1,4 +1,4 @@
-module github.com/perocha/dapr-starter
+module github.com/perocha/serv-sub
 
 go 1.18
 

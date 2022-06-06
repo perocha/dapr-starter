@@ -8,7 +8,7 @@ import (
 
 	"github.com/dapr/go-sdk/service/common"
 	daprd "github.com/dapr/go-sdk/service/http"
-	"github.com/perocha/dapr-starter/config"
+	"github.com/perocha/serv-sub/config"
 )
 
 var sub = &common.Subscription{
